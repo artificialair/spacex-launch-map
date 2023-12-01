@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpaceX Launch Map</title>
-    <script defer src="./assets/js/script.js"></script>
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <!--CSS for Map API-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     <script defer src="./assets/js/script.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
@@ -21,15 +28,13 @@
           <div class="form-group row justify-content-center">
             <div class="form-group col-md-2 mx-3">
               <label for="exampleInputEmail1" class="form-label mt-4 fs-5">Search for a launch!</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search!">
-              <button type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Submit</button>
+              <input id="search-bar" type="search" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search!">
+              <button id="search-button" type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Search</button>
             </div>
             <div class="card mb-3 col-md-8">
-              <h3 class="card-header">Space X Map</h3> 
-              <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
-                <rect width="100%" height="100%" fill="#868e96"></rect>
-                <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
-              </svg>
+              <h3 class="card-header">Space X Map</h3>
+              <div id="map" style="height:180px;"></div>
+
             </div>
         </div>
     </fieldset>
