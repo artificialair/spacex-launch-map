@@ -1,10 +1,12 @@
+// housekeeping
 const searchBar = document.querySelector("#search-bar");
 const searchButton = document.querySelector("#search-button");
 var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
 
-function displayCards(data, launchPadName, landingPadName) {
+// fuction to display info card to page
+function displayCard(data, launchPadName, landingPadName) {
   resultsContainer.innerHTML = null;
 
   var cardEl = document.createElement("div");
@@ -56,6 +58,7 @@ function displayCards(data, launchPadName, landingPadName) {
     .append(h4El, pEl1, pEl2, pEl3, pEl4, pEl5, aEl);
 }
 
+// function to fetch launch & landing pad data from API
 function getPadData(result) {
   var launchPadName;
   var landingPadName;
@@ -70,7 +73,7 @@ function getPadData(result) {
         .then((response) => response.json())
         .then((json) => {
           landingPadName = json.full_name;
-          displayCards(result, launchPadName, landingPadName);
+          displayCard(result, launchPadName, landingPadName);
         });
     });
 }
@@ -85,6 +88,8 @@ function searchLaunchCache(launchToSearch) {
 
   getPadData(result);
 }
+
+// function to fetch flight data from API
 function createLaunchCache(launchToSearch) {
   if (!cached) {
     fetch("https://api.spacexdata.com/v4/launches")
@@ -99,6 +104,7 @@ function createLaunchCache(launchToSearch) {
   }
 }
 
+// click event listener for search button
 searchButton.addEventListener("click", function (event) {
   event.preventDefault();
 
@@ -108,6 +114,7 @@ searchButton.addEventListener("click", function (event) {
   createLaunchCache(launchToSearch);
 });
 
+// displays map to map container from API
 var map = L.map("map").setView([51.505, -0.09], 14);
 
 L.tileLayer("https://tile.openstreetmap.org/0/0/0.png", {
