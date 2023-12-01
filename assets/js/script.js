@@ -4,20 +4,7 @@ var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
 
-function searchLaunchCache(launchToSearch) {
-    for (var launch of launchCache) {
-        if (launch.flight_number == launchToSearch) {
-            var result = launch;
-            break;
-        }
-    }
-
-    displayCards(result);
-}
-
-
-
-function displayCards(data) {
+function displayCards(data, launchPadName, landingPadName) {
     resultsContainer.innerHTML = null;
 
     var cardEl = document.createElement('div');
@@ -41,11 +28,11 @@ function displayCards(data) {
 
     var pEl3 = document.createElement('p');
     pEl3.classList.add('card-text');
-    pEl3.textContent = getLaunchPadData(data.launchpad);
+    pEl3.textContent = launchPadName;
     
     var pEl4 = document.createElement('p');
     pEl4.classList.add('card-text');
-    // pEl4.textContent = data.;
+    pEl4.textContent = landingPadName;
     
     var pEl5 = document.createElement('p');
     pEl5.classList.add('card-text');
@@ -62,17 +49,35 @@ function displayCards(data) {
         .append(h4El, pEl1, pEl2, pEl3, pEl4, pEl5, aEl);
 };
 
-function getLaunchPadData(LaunchPadData) {
-    fetch("https://api.spacexdata.com/v4/launchpads/" + LaunchPadData)
-.then(response => response.json())
-.then(json => {
-  var launchPadName = json.full_name
-  console.log (launchPadName)
-  return launchPadName;
-})
+function getPadData(result) {
+    var launchPadName;
+    var landingPadName;
+
+    fetch("https://api.spacexdata.com/v4/launchpads/" + result.launchpad)
+    .then(response => response.json())
+    .then(json => {
+        launchPadName = json.full_name
+    }).then(() => {
+        fetch("https://api.spacexdata.com/v4/landpads/" + result.cores[0].landpad)
+        .then(response => response.json())
+        .then(json => {
+            landingPadName = json.full_name
+            displayCards(result, launchPadName, landingPadName);
+        })
+    });
 };
 
-function getLaunchData(launchToSearch) {
+function searchLaunchCache(launchToSearch) {
+    for (var launch of launchCache) {
+        if (launch.flight_number == launchToSearch) {
+            var result = launch;
+            break;
+        }
+    }
+
+    getPadData(result);
+}
+function createLaunchCache(launchToSearch) {
     if (!cached) {
         fetch("https://api.spacexdata.com/v4/launches")
             .then(response => response.json())
@@ -92,7 +97,7 @@ searchButton.addEventListener("click", function (event) {
     var launchToSearch = searchBar.value;
     searchBar.value = null;
 
-    getLaunchData(launchToSearch);
+    createLaunchCache(launchToSearch);
 })
 
 var map = L.map('map').setView([51.505, -0.09], 14);
