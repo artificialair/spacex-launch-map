@@ -3,58 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpaceX Launch Map</title>
+    <title>&#128640 SpaceX Launch Map</title>
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-    <!--CSS for Map API-->
+<!--CSS for map API-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
+<!-- script for map API -->
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
      <script defer src="./assets/js/script.js"></script>
 </head>
 <body>
+<!-- nav bar -->
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">SpaceX Launch Map</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">&#128640 SpaceX Launch Map</a>
+      </div>
+    </nav>
+<!-- search form -->
+    <form>
+      <fieldset>
+        <div class="form-group row justify-content-center">
+          <div class="form-group col-md-2 mx-3">
+            <label for="exampleInputEmail1" class="form-label mt-4 fs-5">Search for a launch!</label>
+            <input id="search-bar" type="search" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search by flight number (e.g. 65)">
+            <button id="search-button" type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Search</button>
+          </div>
+<!-- map container -->
+          <div class="card mb-3 col-md-8 py-2">
+            <div id="map" style="height:240px;"></div>
+          </div>
         </div>
-      </nav>
-      <form>
-        <fieldset>
-          <div class="form-group row justify-content-center">
-            <div class="form-group col-md-2 mx-3">
-              <label for="exampleInputEmail1" class="form-label mt-4 fs-5">Search for a launch!</label>
-              <input id="search-bar" type="search" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search!">
-              <button id="search-button" type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Search</button>
-            </div>
-            <div class="card mb-3 col-md-8">
-              <h3 class="card-header">Space X Map</h3>
-              <div id="map" style="height:180px;"></div>
-
-            </div>
-        </div>
-    </fieldset>
-</form>
-      <div class="row">
-      <div id= "results-container">
-        <div class="card-header fs-2">Mission</div>
-        <div class="card-body">
-          <h4 class="card-title" id="mission-name">Mission Name</h4>
-          <p class="card-text">This area will be used to generate the information about the rocket and the mission to the user.</p>
-          <p class="card-text" id="mission-num">Mission Number: </p>
-          <p class="card-text" id="launch-date">Launch Date: </p>
-          <p class="card-text" id="launch-site">Launch Site: </p>
-          <p class="card-text" id="landing-site">Landing Site: </p>
-          <p class="card-text" id="payload">Payload: </p>
-          <p class="card-text" id="yt-link">YouTube Link: </p> 
-          <!-- change YouTube link to <a> tag -->
-        </div>
-        </div>
-    </div>
+      </fieldset>
+    </form>
+<!-- results container -->
+    <div class="row">
+      <div id= "results-container"></div>
     </div>
 </body>
 </html>
