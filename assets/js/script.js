@@ -5,8 +5,17 @@ var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
 
+// initializing map
+var map = L.map("map")
+
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution:
+    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+}).addTo(map);
+
 // fuction to display info card to page
-function displayCard(data, launchPadName, landingPadName, payloadType) {
+function displayCard(data, launchpad, landpad, payload) {
   resultsContainer.innerHTML = null;
 
   var cardEl = document.createElement("div");
@@ -36,15 +45,19 @@ function displayCard(data, launchPadName, landingPadName, payloadType) {
 
   var pEl3 = document.createElement("p");
   pEl3.classList.add("card-text");
-  pEl3.textContent = "Launch Pad: " + launchPadName;
+  pEl3.textContent = "Launch Pad: " + launchpad.full_name;
 
   var pEl4 = document.createElement("p");
   pEl4.classList.add("card-text");
-  pEl4.textContent = "Landing Pad: " + landingPadName;
+  if (landpad) {
+    pEl4.textContent = "Landing Pad: " + landpad.full_name;
+  } else {
+    pEl4.textContent = "Landing Pad: None"
+  }
 
   var pEl5 = document.createElement("p");
   pEl5.classList.add("card-text");
-  pEl5.textContent = "Payload: " + payloadType;
+  pEl5.textContent = "Payload: " + payload.type;
 
   var aEl = document.createElement("a");
   aEl.classList.add("btn", "btn-primary");
@@ -56,32 +69,39 @@ function displayCard(data, launchPadName, landingPadName, payloadType) {
     .appendChild(cardEl)
     .appendChild(cardBodyEl)
     .append(h4El, pEl1, pEl2, pEl3, pEl4, pEl5, aEl);
+  
+  map.setView([launchpad.latitude, launchpad.longitude], 14);
+  L.marker([launchpad.latitude, launchpad.longitude]).addTo(map)
+    .bindPopup(launchpad.full_name)
+    .openPopup();
+  document.getElementById("map-container").setAttribute("style", "visibility:visible;")
 }
 
 // function to fetch launch & landing pad data from API
 function getPadData(result) {
-  var launchPadName;
-  var landingPadName;
-  var payloadType
+  var launchpad;
+  var landpad;
+  var payload;
 
   fetch("https://api.spacexdata.com/v4/launchpads/" + result.launchpad)
     .then((response) => response.json())
     .then((json) => {
-      launchPadName = json.full_name;
+      launchpad = json;
     })
     .then(() => {
-      fetch("https://api.spacexdata.com/v4/landpads/" + result.cores[0].landpad)
+      fetch("https://api.spacexdata.com/v4/payloads/" + result.payloads[0])
         .then((response) => response.json())
         .then((json) => {
-          landingPadName = json.full_name;
+          payload = json;
         })
-      })
-      .then(() => {
-        fetch("https://api.spacexdata.com/v4/payloads/" + result.payloads[0])
-        .then((response) => response.json())
-        .then((json) => {
-          payloadType = json.type;
-          displayCard(result, launchPadName, landingPadName, payloadType);
+        .then(() => {
+          if (!result.cores[0].landpad) return displayCard(result, launchpad, landpad, payload);
+          fetch("https://api.spacexdata.com/v4/landpads/" + result.cores[0].landpad)
+            .then((response) => response.json())
+            .then((json) => {
+              landpad = json;
+              displayCard(result, launchpad, landpad, payload);
+            });
         });
     });
 }
@@ -121,12 +141,3 @@ searchButton.addEventListener("click", function (event) {
 
   createLaunchCache(launchToSearch);
 });
-
-// displays map to map container from API
-var map = L.map("map").setView([51.505, -0.09], 14);
-
-L.tileLayer("https://tile.openstreetmap.org/0/0/0.png", {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-}).addTo(map);
