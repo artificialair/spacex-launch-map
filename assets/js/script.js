@@ -7,7 +7,7 @@ var cached = false;
 var searchHistory = { launch: [] };
 var historyDiv = document.querySelector("#history");
 // initializing map
-var map = L.map("map")
+var map = L.map("map");
 
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -25,7 +25,8 @@ function displayCard(data, launchpad, landpad, payload) {
     "col-md-3",
     "text-white",
     "bg-secondary",
-    "mx-4"
+    "mx-4",
+    "my-3"
   );
   cardEl.setAttribute("style", "max-width: 28rem;");
 
@@ -53,7 +54,7 @@ function displayCard(data, launchpad, landpad, payload) {
   if (landpad) {
     pEl4.textContent = "Landing Pad: " + landpad.full_name;
   } else {
-    pEl4.textContent = "Landing Pad: None"
+    pEl4.textContent = "Landing Pad: None";
   }
 
   var pEl5 = document.createElement("p");
@@ -72,10 +73,13 @@ function displayCard(data, launchpad, landpad, payload) {
     .append(h4El, pEl1, pEl2, pEl3, pEl4, pEl5, aEl);
 
   map.setView([launchpad.latitude, launchpad.longitude], 14);
-  L.marker([launchpad.latitude, launchpad.longitude]).addTo(map)
+  L.marker([launchpad.latitude, launchpad.longitude])
+    .addTo(map)
     .bindPopup(launchpad.full_name)
     .openPopup();
-  document.getElementById("map-container").setAttribute("style", "visibility:visible;")
+  document
+    .getElementById("map-container")
+    .setAttribute("style", "visibility:visible;");
 }
 
 // function to fetch launch & landing pad data from API
@@ -96,8 +100,11 @@ function getPadData(result) {
           payload = json;
         })
         .then(() => {
-          if (!result.cores[0].landpad) return displayCard(result, launchpad, landpad, payload);
-          fetch("https://api.spacexdata.com/v4/landpads/" + result.cores[0].landpad)
+          if (!result.cores[0].landpad)
+            return displayCard(result, launchpad, landpad, payload);
+          fetch(
+            "https://api.spacexdata.com/v4/landpads/" + result.cores[0].landpad
+          )
             .then((response) => response.json())
             .then((json) => {
               landpad = json;
@@ -133,23 +140,38 @@ function createLaunchCache(launchToSearch) {
   }
 }
 
-
+// function to load local storage
 function onLoad() {
+  historyDiv.innerHTML = "";
   if (localStorage.getItem("search history")) {
     searchHistory = JSON.parse(localStorage.getItem("search history"));
-  console.log(searchHistory)
-  console.log(searchHistory.launch[0]);
-  console.log(history);
-  for (var i = 0; i < searchHistory.launch.length; i++){
-    var btnText = searchHistory.launch[i];
-    var btn = document.createElement("button");
-    btn.textContent = btnText;
-    historyDiv.appendChild(btn);
+    for (var i = 0; i < searchHistory.launch.length; i++) {
+      var btnText = searchHistory.launch[i];
+      var btn = document.createElement("button");
+      btn.classList.add(
+        "btn",
+        "btn-secondary",
+        "d-grid",
+        "col-10",
+        "mx-auto",
+        "mt-1"
+      );
+      btn.textContent = btnText;
+      historyDiv.appendChild(btn);
+    }
   }
-}
 }
 onLoad();
 
+historyDiv.addEventListener("click", function (event) {
+  event.preventDefault();
+  if (event.target.matches(".btn")) {
+    var textContent = event.target.textContent;
+    createLaunchCache(textContent);
+  }
+});
+
+// function to set local storage
 function addHistory(dataToSave) {
   searchHistory.launch.push(dataToSave);
   localStorage.setItem("search history", JSON.stringify(searchHistory));
@@ -165,4 +187,5 @@ searchButton.addEventListener("click", function (event) {
   searchBar.value = null;
 
   createLaunchCache(launchToSearch);
+  onLoad();
 });
