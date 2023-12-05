@@ -4,7 +4,8 @@ const searchButton = document.querySelector("#search-button");
 var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
-
+var searchHistory = { launch: [] };
+var historyDiv = document.querySelector("#history");
 // initializing map
 var map = L.map("map")
 
@@ -64,12 +65,12 @@ function displayCard(data, launchpad, landpad, payload) {
   aEl.textContent = "Youtube Link";
   aEl.href = data.links.webcast;
   aEl.target = "_blank";
-  
+
   resultsContainer
     .appendChild(cardEl)
     .appendChild(cardBodyEl)
     .append(h4El, pEl1, pEl2, pEl3, pEl4, pEl5, aEl);
-  
+
   map.setView([launchpad.latitude, launchpad.longitude], 14);
   L.marker([launchpad.latitude, launchpad.longitude]).addTo(map)
     .bindPopup(launchpad.full_name)
@@ -132,11 +133,35 @@ function createLaunchCache(launchToSearch) {
   }
 }
 
+
+function onLoad() {
+  if (localStorage.getItem("search history")) {
+    searchHistory = JSON.parse(localStorage.getItem("search history"));
+  console.log(searchHistory)
+  console.log(searchHistory.launch[0]);
+  console.log(history);
+  for (var i = 0; i < searchHistory.launch.length; i++){
+    var btnText = searchHistory.launch[i];
+    var btn = document.createElement("button");
+    btn.textContent = btnText;
+    historyDiv.appendChild(btn);
+  }
+}
+}
+onLoad();
+
+function addHistory(dataToSave) {
+  searchHistory.launch.push(dataToSave);
+  localStorage.setItem("search history", JSON.stringify(searchHistory));
+}
 // click event listener for search button
 searchButton.addEventListener("click", function (event) {
   event.preventDefault();
 
   var launchToSearch = searchBar.value;
+
+  addHistory(searchBar.value);
+  // localStorage.setItem("search history", searchBar.value);
   searchBar.value = null;
 
   createLaunchCache(launchToSearch);
