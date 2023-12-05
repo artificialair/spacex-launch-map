@@ -6,7 +6,7 @@ var launchCache;
 var cached = false;
 
 // fuction to display info card to page
-function displayCard(data, launchPadName, landingPadName) {
+function displayCard(data, launchPadName, landingPadName, payloadType) {
   resultsContainer.innerHTML = null;
 
   var cardEl = document.createElement("div");
@@ -44,7 +44,7 @@ function displayCard(data, launchPadName, landingPadName) {
 
   var pEl5 = document.createElement("p");
   pEl5.classList.add("card-text");
-  pEl5.textContent = "Payload: ";
+  pEl5.textContent = "Payload: " + payloadType;
 
   var aEl = document.createElement("a");
   aEl.classList.add("btn", "btn-primary");
@@ -62,6 +62,7 @@ function displayCard(data, launchPadName, landingPadName) {
 function getPadData(result) {
   var launchPadName;
   var landingPadName;
+  var payloadType
 
   fetch("https://api.spacexdata.com/v4/launchpads/" + result.launchpad)
     .then((response) => response.json())
@@ -73,7 +74,14 @@ function getPadData(result) {
         .then((response) => response.json())
         .then((json) => {
           landingPadName = json.full_name;
-          displayCard(result, launchPadName, landingPadName);
+        })
+      })
+      .then(() => {
+        fetch("https://api.spacexdata.com/v4/payloads/" + result.payloads[0])
+        .then((response) => response.json())
+        .then((json) => {
+          payloadType = json.type;
+          displayCard(result, launchPadName, landingPadName, payloadType);
         });
     });
 }
