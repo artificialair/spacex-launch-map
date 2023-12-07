@@ -1,10 +1,11 @@
 // housekeeping
 const searchBar = document.querySelector("#search-bar");
 const searchButton = document.querySelector("#search-button");
+const latestButton = document.querySelector("#get-latest");
 var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
-var searchHistory = { launch: [] };
+var searchHistory = [];
 var historyDiv = document.querySelector("#history");
 // initializing map
 var map = L.map("map");
@@ -142,11 +143,11 @@ function createLaunchCache(launchToSearch) {
 
 // function to load local storage
 function onLoad() {
-  historyDiv.innerHTML = "";
-  if (localStorage.getItem("search history")) {
-    searchHistory = JSON.parse(localStorage.getItem("search history"));
-    for (var i = 0; i < searchHistory.launch.length; i++) {
-      var btnText = searchHistory.launch[i];
+  historyDiv.innerHTML = null;
+  if (localStorage.getItem("launch-search-history")) {
+    searchHistory = JSON.parse(localStorage.getItem("launch-search-history"));
+    for (var i = 0; i < searchHistory.length; i++) {
+      var btnText = searchHistory[i];
       var btn = document.createElement("button");
       btn.classList.add(
         "btn",
@@ -157,7 +158,7 @@ function onLoad() {
         "mt-1"
       );
       btn.textContent = btnText;
-      historyDiv.appendChild(btn);
+      historyDiv.prepend(btn);
     }
   }
 }
@@ -167,15 +168,35 @@ historyDiv.addEventListener("click", function (event) {
   event.preventDefault();
   if (event.target.matches(".btn")) {
     var textContent = event.target.textContent;
+    
     createLaunchCache(textContent);
+
+    addHistory(textContent);
+    onLoad();
   }
 });
 
 // function to set local storage
 function addHistory(dataToSave) {
-  searchHistory.launch.push(dataToSave);
-  localStorage.setItem("search history", JSON.stringify(searchHistory));
+  if (searchHistory.includes(dataToSave)) {
+    searchHistory.splice(searchHistory.indexOf(dataToSave), 1)
+  }
+  searchHistory.push(dataToSave);
+  // For neatness purposes, the search history cannot be longer than 5
+  if (searchHistory.length > 5) {
+    searchHistory.splice(0, 1);
+  }
+
+  localStorage.setItem("launch-search-history", JSON.stringify(searchHistory));
 }
+
+latestButton.addEventListener("click", function() {
+  fetch("https://api.spacexdata.com/v4/launches/latest")
+  .then((response) => response.json())
+  .then((json) => {
+    getPadData(json);
+  })
+})
 // click event listener for search button
 searchButton.addEventListener("click", function (event) {
   event.preventDefault();

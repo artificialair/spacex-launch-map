@@ -26,12 +26,13 @@
     <form>
       <fieldset>
         <div class="form-group row justify-content-center">
-          <div class="form-group col-md-2 mx-3">
-            <label for="exampleInputEmail1" class="form-label mt-4 fs-5">Search for a launch!</label>
-            <input id="search-bar" type="search" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search by flight number (e.g. 65)">
+          <div class="form-group col-md-2 m-3">
+            <legend class="text-center">Search for a Launch!</legend>
+            <button id="get-latest" type="button" class="btn btn-primary d-grid col-8 mx-auto mt-3">Get Latest Launch</button>
+            <hr>
+            <input id="search-bar" type="search" class="form-control" placeholder="Search by flight number (e.g. 65)">
             <button id="search-button" type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Search</button>
-          <div id="history" class="text-center fw-semibold"> Search History
-          </div>
+          <div id="history" class="text-center fw-semibold"> Search History</div>
           </div>
 <!-- map container -->
           <div id="map-container" class="card mb-3 col-md-8 py-3", style="visibility:hidden;">
