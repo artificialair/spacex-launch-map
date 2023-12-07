@@ -7,6 +7,7 @@ var launchCache;
 var cached = false;
 var searchHistory = [];
 var historyDiv = document.querySelector("#history");
+
 // initializing map
 var map = L.map("map");
 
@@ -115,6 +116,7 @@ function getPadData(result) {
     });
 }
 
+// function to search for flight number
 function searchLaunchCache(launchToSearch) {
   for (var launch of launchCache) {
     if (launch.flight_number == launchToSearch) {
@@ -164,6 +166,7 @@ function onLoad() {
 }
 onLoad();
 
+// click event listener for history buttons
 historyDiv.addEventListener("click", function (event) {
   event.preventDefault();
   if (event.target.matches(".btn")) {
@@ -197,6 +200,7 @@ latestButton.addEventListener("click", function() {
     getPadData(json);
   })
 })
+
 // click event listener for search button
 searchButton.addEventListener("click", function (event) {
   event.preventDefault();
