@@ -1,6 +1,7 @@
 // housekeeping
 const searchBar = document.querySelector("#search-bar");
 const searchButton = document.querySelector("#search-button");
+const latestButton = document.querySelector("#get-latest");
 var resultsContainer = document.querySelector("#results-container");
 var launchCache;
 var cached = false;
@@ -142,7 +143,7 @@ function createLaunchCache(launchToSearch) {
 
 // function to load local storage
 function onLoad() {
-  historyDiv.innerHTML = "";
+  historyDiv.innerHTML = "Search History";
   if (localStorage.getItem("search history")) {
     searchHistory = JSON.parse(localStorage.getItem("search history"));
     for (var i = 0; i < searchHistory.launch.length; i++) {
@@ -176,6 +177,14 @@ function addHistory(dataToSave) {
   searchHistory.launch.push(dataToSave);
   localStorage.setItem("search history", JSON.stringify(searchHistory));
 }
+
+latestButton.addEventListener("click", function() {
+  fetch("https://api.spacexdata.com/v4/launches/latest")
+  .then((response) => response.json())
+  .then((json) => {
+    getPadData(json);
+  })
+})
 // click event listener for search button
 searchButton.addEventListener("click", function (event) {
   event.preventDefault();
