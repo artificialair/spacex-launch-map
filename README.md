@@ -7,6 +7,7 @@
 ## Technologies Used
   
   - Bootswatch
+  - DayJS
   - SpaceX API
   - Leaflet Map API
 
