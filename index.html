@@ -13,6 +13,10 @@
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
+<!-- script for DayJS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+      integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U="
+      crossorigin="anonymous"></script>
      <script defer src="./assets/js/script.js"></script>
 </head>
 <body>
@@ -25,19 +29,20 @@
 <!-- search form -->
     <form>
       <fieldset>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row bg-light">
           <div class="form-group col-md-2 m-3">
             <legend class="text-center">Search for a Launch!</legend>
-            <button id="get-latest" type="button" class="btn btn-primary d-grid col-8 mx-auto mt-3">Get Latest Launch</button>
+            <button id="get-latest" type="button" class="btn btn-primary d-grid col-12 mx-auto mt-3">Get Latest Launch</button>
             <hr>
             <input id="search-bar" type="search" class="form-control" placeholder="Search by flight number (e.g. 65)">
-            <button id="search-button" type="submit" class="btn btn-primary d-grid col-8 mx-auto mt-3">Search</button>
-<!-- search history -->
+            <button id="search-button" type="submit" class="btn btn-primary d-grid col-12 mx-auto mt-3">Search</button>
+            <hr>
+            <legend class="text-center">Past Searches</legend>
           <div id="history" class="text-center fw-semibold"> Search History</div>
           </div>
 <!-- map container -->
-          <div id="map-container" class="card mb-3 col-md-8 py-3", style="visibility:hidden;">
-            <div id="map" style="height:360px;"></div>
+          <div id="map-container" class="card mb-3 col-md-8 my-3", style="visibility:hidden;">
+            <div id="map" class="my-2" style="height:360px;"></div>
           </div>
         </div>
       </fieldset>
