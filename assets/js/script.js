@@ -44,7 +44,7 @@ function displayCard(data, launchpad, landpad, payload) {
 
   var pEl2 = document.createElement("p");
   pEl2.classList.add("card-text");
-  pEl2.textContent = "Launch Date: " + data.date_utc;
+  pEl2.textContent = "Launch Time: " + dayjs(data.date_utc).format('MMMM DD, YYYY HH:mm UTC');
 
   var pEl3 = document.createElement("p");
   pEl3.classList.add("card-text");
@@ -64,7 +64,7 @@ function displayCard(data, launchpad, landpad, payload) {
 
   var aEl = document.createElement("a");
   aEl.classList.add("btn", "btn-primary");
-  aEl.textContent = "Youtube Link";
+  aEl.textContent = "YouTube Link";
   aEl.href = data.links.webcast;
   aEl.target = "_blank";
 
